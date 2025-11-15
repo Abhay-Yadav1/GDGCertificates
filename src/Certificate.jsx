@@ -27,7 +27,7 @@ function Certificate() {
     console.log("fetching data started");
 
     try {
-      const response = await fetch("https://gdg-certificates-proxy.onrender.com" + url, {
+      const response = await fetch("https://gdg-certificates-proxy.onrender.com/" + url, {
         method: "GET",
       });
       if (!response.ok) {
@@ -39,11 +39,19 @@ function Certificate() {
       const badges = page.querySelectorAll(".profile-badge");
       const finalBadges = [];
       badges.forEach((badge) => {
-        const b = {
-          link: badge.children[0].href,
-          img_url: badge.children[0].children[0].src,
-          b_name: badge.children[1].innerText,
-        };
+           const link = badge.children[0].href;
+           let imgUrl = badge.children[0].children[0].src;
+   
+  // Fix relative URLs
+        if (imgUrl && !imgUrl.startsWith('http')) {
+              imgUrl = 'https://www.cloudskillsboost.google' + imgUrl;
+        }
+  
+  const b = {
+    link: link,
+    img_url: imgUrl,
+    b_name: badge.children[1].innerText,
+  };
         finalBadges.push(b);
         console.log(b);
       });
